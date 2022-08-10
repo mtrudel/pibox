@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 30s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'snmp'
+    static_configs:
+      - targets:
+        - 192.168.10.1
+    metrics_path: /snmp
+    params:
+      module: [if_mib]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: snmp:9116
+  - job_name: boiler
+    scrape_interval: 60s
+    static_configs:
+      - targets: ['192.168.10.10:4000']
+    metrics_path: /
+  - job_name: unpoller
+    static_configs:
+      - targets: ['unpoller:9130']
+  - job_name: ping_exporter
+    static_configs:
+      - targets: ['ping_exporter:9427']
+  - job_name: node_exporter
+    static_configs:
+      - targets: ['node_exporter:9100']
+  - job_name: speedtest_exporter
+    scrape_interval: 12h
+    scrape_timeout: 1m
+    static_configs:
+      - targets: ['speedtest-exporter:9798']

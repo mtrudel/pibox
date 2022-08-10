@@ -1,0 +1,214 @@
+name: docker
+services:
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt:latest
+    restart: always
+    depends_on:
+      - mosquitto
+    expose:
+      - "8080"
+    volumes:
+      - zigbee2mqtt-data:/app/data
+      - /run/udev:/run/udev:ro
+    devices:
+      - /dev/ttyACM0
+    environment:
+      - TZ=$TIMEZONE
+  zwavejs2mqtt:
+    image: zwavejs/zwavejs2mqtt:latest
+    restart: always
+    depends_on:
+      - mosquitto
+    expose:
+      - "8091"
+    volumes:
+      - zwavejs2mqtt-data:/usr/src/app/store
+    devices:
+      - /dev/ttyACM1
+    environment:
+      - SESSION_SECRET=$ZWAVE_SESSION_SECRET
+      - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
+      - TZ=$TIMEZONE
+  homebridge:
+    image: oznu/homebridge:latest
+    restart: always
+    depends_on:
+      - mosquitto
+    networks:
+      default: {}
+      dockervlan:
+        ipv4_address: $HOMEBRIDGE_IP_ADDRESS
+    expose:
+      - "8581"
+    volumes:
+      - homebridge-data:/homebridge
+    environment:
+      - TZ=$TIMEZONE
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    restart: always
+    expose:
+      - "1883"
+    volumes:
+      - mosquitto-config:/mosquitto/config
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+  unifi-controller:
+    image: lscr.io/linuxserver/unifi-controller:latest
+    restart: always
+    expose:
+      - "8443"
+    ports:
+      - "3478:3478/udp"
+      - "10001:10001/udp"
+      - "8080:8080"
+      - "1900:1900/udp"
+    volumes:
+      - unifi-data:/config
+    environment:
+      - MEM_LIMIT=1024
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    expose:
+      - "3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,natel-discrete-panel,grafana-piechart-panel
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    labels:
+      docker-volume-backup.stop-during-backup: true
+    expose:
+      - "9090"
+    volumes:
+      - prometheus-data:/prometheus
+      - ./prometheus:/etc/prometheus
+  snmp:
+    image: quay.io/prometheus/snmp-exporter:latest
+    restart: always
+    expose:
+      - "9116"
+  ping_exporter:
+    image: czerwonk/ping_exporter:latest
+    restart: always
+    expose:
+      - "9427"
+    volumes:
+      - ./ping_exporter:/config:ro
+  speedtest-exporter:
+    image: miguelndecarvalho/speedtest-exporter:latest
+    restart: always
+    expose:
+      - "9798"
+    environment:
+      - SPEEDTEST_SERVER=$SPEEDTEST_SERVER
+  unpoller:
+    image: golift/unifi-poller:latest
+    restart: always
+    expose:
+      - "9130"
+    environment:
+      - UP_INFLUXDB_DISABLE=true
+      - UP_POLLER_DEBUG=false
+      - UP_UNIFI_DYNAMIC=false
+      - UP_PROMETHEUS_HTTP_LISTEN=0.0.0.0:9130
+      - UP_PROMETHEUS_NAMESPACE=unifipoller
+      - UP_UNIFI_CONTROLLER_0_URL=$UNIFI_URI
+      - UP_UNIFI_CONTROLLER_0_USER=$UNIFI_USERNAME
+      - UP_UNIFI_CONTROLLER_0_PASS=$UNIFI_PASSWORD
+      - UP_UNIFI_CONTROLLER_0_SAVE_ALARMS=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_ANOMALIES=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_DPI=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_EVENTS=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_IDS=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_SITES=true
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    restart: always
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+  pidp11:
+    build: pidp11
+    privileged: true
+    restart: always
+  shellbox:
+    build: shellbox
+    restart: always
+    hostname: shellbox
+    stdin_open: true
+    tty: true
+    volumes:
+      - shellbox-root-home:/root
+  cups:
+    image: chuckcharlie/cups-avahi-airprint:latest
+    restart: always
+    networks:
+      dockervlan:
+        ipv4_address: $CUPS_IP_ADDRESS
+    expose:
+      - "631"
+    volumes:
+      - cups-config:/config
+      - cups-services:/services
+    environment:
+      - CUPSADMIN=$CUPS_USERNAME
+      - CUPSPASSWORD=$CUPS_PASSWORD
+  caddy:
+    image: caddy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+  backup:
+    image: offen/docker-volume-backup:latest
+    restart: always
+    volumes:
+      - zigbee2mqtt-data:/backup/zigbee2mqtt-data:ro
+      - zwavejs2mqtt-data:/backup/zwave2mqtt-data:ro
+      - homebridge-data:/backup/homebridge-data:ro
+      - mosquitto-config:/backup/mosquitto-config:ro
+      - mosquitto-data:/backup/mosquitto-data:ro
+      - unifi-data:/backup/unifi-data:ro
+      - grafana-data:/backup/grafana-data:ro
+      - prometheus-data:/backup/prometheus-data:ro
+      - shellbox-root-home:/backup/shellbox-root-home:ro
+      - cups-config:/backup/cups-config:ro
+      - cups-services:/backup/cups-services:ro
+      - caddy-data:/backup/caddy-data:ro
+      - ./archive:/archive
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - BACKUP_CRON_EXPRESSION=0 7 * * *
+      - BACKUP_RETENTION_DAYS=7
+      - AWS_ENDPOINT=$AWS_ENDPOINT
+      - AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+networks:
+  dockervlan:
+    name: dockervlan
+    external: true
+volumes:
+  zigbee2mqtt-data:
+  zwavejs2mqtt-data:
+  homebridge-data:
+  mosquitto-config:
+  mosquitto-data:
+  mosquitto-log:
+  unifi-data:
+  grafana-data:
+  prometheus-data:
+  shellbox-root-home:
+  cups-config:
+  cups-services:
+  caddy-data:
