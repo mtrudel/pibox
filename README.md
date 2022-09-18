@@ -6,6 +6,7 @@ This is a unified docker-compose setup to run the following things in our life:
 * A [Zigbee](https://www.zigbee2mqtt.io) bridge to control lights and such
 * A [ZWave](https://zwave-js.github.io/zwavejs2mqtt) bridge to control door locks and such
 * A [Homebridge](https://homebridge.io) server to expose Zigbee and ZWave stuff to HomeKit
+* A [HAP](https://github.com/mtrudel/hap) instance to control our skylight blinds
 
 ## Network Stuff
 * A [UniFi](https://ui.com) controller

@@ -53,6 +53,15 @@ services:
       - mosquitto-config:/mosquitto/config
       - mosquitto-data:/mosquitto/data
       - mosquitto-log:/mosquitto/log
+  hapbox:
+    build: hapbox
+    privileged: true
+    restart: always
+    networks:
+      dockervlan:
+        ipv4_address: $HAPBOX_IP_ADDRESS
+    volumes:
+      - hapbox-data:/app/_build/prod/rel/hapbox/hap_data
   unifi-controller:
     image: lscr.io/linuxserver/unifi-controller:latest
     restart: always
@@ -178,6 +187,7 @@ services:
       - homebridge-data:/backup/homebridge-data:ro
       - mosquitto-config:/backup/mosquitto-config:ro
       - mosquitto-data:/backup/mosquitto-data:ro
+      - hapbox-data:/backup/hapbox-data:ro
       - unifi-data:/backup/unifi-data:ro
       - grafana-data:/backup/grafana-data:ro
       - prometheus-data:/backup/prometheus-data:ro
@@ -205,6 +215,7 @@ volumes:
   mosquitto-config:
   mosquitto-data:
   mosquitto-log:
+  hapbox-data:
   unifi-data:
   grafana-data:
   prometheus-data:
