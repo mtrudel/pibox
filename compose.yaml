@@ -178,6 +178,25 @@ services:
     volumes:
       - caddy-data:/data
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+  tailscale:
+    # A one-time setup of this container is required. Run something like:
+    #
+    # docker compose exec tailscale tailscale up --advertise-exit-node --advertise-routes=192.168.10.0/24
+    #
+    # to add this node to your tailnet. Note that you'll likely need to approve the exit node / subnet routes
+    # in the tailscale admin panel
+    #
+    image: tailscale/tailscale:latest
+    restart: always
+    hostname: tailscale-docker
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    entrypoint: tailscaled
+    volumes:
+      - tailscale-data:/var/lib/tailscale/
+    devices:
+      - /dev/net/tun
   backup:
     image: offen/docker-volume-backup:latest
     restart: always
@@ -195,6 +214,7 @@ services:
       - cups-config:/backup/cups-config:ro
       - cups-services:/backup/cups-services:ro
       - caddy-data:/backup/caddy-data:ro
+      # Note that tailscale-data is purposely not backed up
       - ./archive:/archive
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
@@ -223,3 +243,4 @@ volumes:
   cups-config:
   cups-services:
   caddy-data:
+  tailscale-data:
