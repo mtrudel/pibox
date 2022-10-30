@@ -143,6 +143,16 @@ services:
       - '--path.rootfs=/host'
     volumes:
       - '/:/host:ro,rslave'
+  nest_exporter:
+    build: pronestheus
+    restart: always
+    expose:
+      - "9777"
+    environment:
+      - PRONESTHEUS_NEST_CLIENT_ID=$PRONESTHEUS_NEST_CLIENT_ID
+      - PRONESTHEUS_NEST_CLIENT_SECRET=$PRONESTHEUS_NEST_CLIENT_SECRET
+      - PRONESTHEUS_NEST_PROJECT_ID=$PRONESTHEUS_NEST_PROJECT_ID
+      - PRONESTHEUS_NEST_REFRESH_TOKEN=$PRONESTHEUS_NEST_REFRESH_TOKEN
   pidp11:
     build: pidp11
     privileged: true
