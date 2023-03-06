@@ -160,6 +160,15 @@ services:
       - PRONESTHEUS_NEST_CLIENT_SECRET=$PRONESTHEUS_NEST_CLIENT_SECRET
       - PRONESTHEUS_NEST_PROJECT_ID=$PRONESTHEUS_NEST_PROJECT_ID
       - PRONESTHEUS_NEST_REFRESH_TOKEN=$PRONESTHEUS_NEST_REFRESH_TOKEN
+  waveplus_exporter:
+    build: waveplus_exporter
+    privileged: true
+    restart: always
+    network_mode: host
+    environment:
+      - WAVEPLUS_SERIALNUM=$WAVEPLUS_SERIALNUM
+    volumes:
+      - '/var/run/dbus/:/var/run/dbus/'
   pidp11:
     build: pidp11
     privileged: true
