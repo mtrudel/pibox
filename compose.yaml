@@ -161,7 +161,7 @@ services:
       - PRONESTHEUS_NEST_PROJECT_ID=$PRONESTHEUS_NEST_PROJECT_ID
       - PRONESTHEUS_NEST_REFRESH_TOKEN=$PRONESTHEUS_NEST_REFRESH_TOKEN
   waveplus_exporter:
-    build: waveplus_exporter
+    build: https://github.com/mtrudel/waveplus_exporter.git#docker_support
     privileged: true
     restart: always
     network_mode: host
