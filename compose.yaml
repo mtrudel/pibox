@@ -150,6 +150,15 @@ services:
       - '--path.rootfs=/host'
     volumes:
       - '/:/host:ro,rslave'
+  ecobee_exporter:
+    build: https://github.com/cfunkhouser/promobee.git
+    restart: always
+    expose:
+      - "8080"
+    volumes:
+      - promobee-data:/var/run/promobee
+    command:
+      - '$ECOBEE_API_KEY'
   waveplus_exporter:
     build: https://github.com/mtrudel/waveplus_exporter.git#docker_support
     privileged: true
@@ -226,6 +235,7 @@ services:
       - unifi-data:/backup/unifi-data:ro
       - grafana-data:/backup/grafana-data:ro
       - prometheus-data:/backup/prometheus-data:ro
+      - promobee-data:/backup/promobee-data:ro
       - shellbox-root-home:/backup/shellbox-root-home:ro
       - cups-config:/backup/cups-config:ro
       - cups-services:/backup/cups-services:ro
@@ -255,6 +265,7 @@ volumes:
   unifi-data:
   grafana-data:
   prometheus-data:
+  promobee-data:
   shellbox-root-home:
   cups-config:
   cups-services:
