@@ -62,6 +62,17 @@ services:
         ipv4_address: $HAPBOX_IP_ADDRESS
     volumes:
       - hapbox-data:/app/_build/prod/rel/hapbox/hap_data
+  zigbee2soco:
+    build: https://github.com/kristianwiklund/zigbee2soco.git#main
+    restart: always
+    networks:
+      default: {}
+      dockervlan:
+        ipv4_address: $ZIGBEE2SOCO_IP_ADDRESS
+    environment:
+      - MQTT_HOST=mosquitto
+      - MQTT_PORT=1883
+      - PREFIX=zigbee2mqtt
   unifi-controller:
     image: lscr.io/linuxserver/unifi-controller:latest
     restart: always
