@@ -7,13 +7,16 @@ This is a unified docker-compose setup to run the following things in our life:
 * A [ZWave](https://zwave-js.github.io/zwavejs2mqtt) bridge to control door locks and such
 * A [Homebridge](https://homebridge.io) server to expose Zigbee and ZWave stuff to HomeKit
 * A [HAP](https://github.com/mtrudel/hap) instance to control our skylight blinds
+* A [Zigbee2soco](https://github.com/kristianwiklund/zigbee2soco) instance to control Sonos speakers via IKEA Symfonisk remotes
 
 ## Network Stuff
 * A [UniFi](https://ui.com) controller
 * A Grafana & Prometheus stack to graph all sorts of things
+* A tailscale node
 * A number of exporters that Prometheus uses as data sources
 
 ## Various Stuff
+* An RTL-SDR powered ADSB stack that publishes to flightradar24
 * A dockerized version of the [PiDP-11](https://obsolescence.wixsite.com/obsolescence/pidp-11) emulator
 * An AirPrint bridge for our ancient laser printer
 * A simple Alpine-based sandbox for futzing around in
