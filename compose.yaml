@@ -87,6 +87,35 @@ services:
       - unifi-data:/config
     environment:
       - MEM_LIMIT=1024
+  readsb:
+    image: ghcr.io/sdr-enthusiasts/docker-readsb-protobuf:latest
+    restart: always
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      - TZ=$TIMEZONE
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_FIX=true
+      - READSB_GAIN=autogain
+      - READSB_LAT=$LAT
+      - READSB_LON=$LON
+      - READSB_MODEAC=true
+      - READSB_RX_LOCATION_ACCURACY=1
+      - READSB_STATS_RANGE=true
+      - READSB_NET_ENABLE=true
+    volumes:
+      - readsbpb_rrd:/run/collectd
+      - readsbpb_autogain:/run/autogain
+      - /proc/diskstats:/proc/diskstats:ro
+    tmpfs:
+      - /run/readsb:size=64M
+      - /var/log:size=32M
+  fr24feed:
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
+    restart: always
+    environment:
+      - BEASTHOST=readsb
+      - FR24KEY=$FR24KEY
   grafana:
     image: grafana/grafana:latest
     restart: always
@@ -273,6 +302,8 @@ volumes:
   mosquitto-data:
   mosquitto-log:
   hapbox-data:
+  readsbpb_rrd:
+  readsbpb_autogain:
   unifi-data:
   grafana-data:
   prometheus-data:
