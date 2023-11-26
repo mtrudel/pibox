@@ -116,6 +116,18 @@ services:
     environment:
       - BEASTHOST=readsb
       - FR24KEY=$FR24KEY
+  piaware:
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
+    restart: always
+    environment:
+      - TZ=$TIMEZONE
+      - RECEIVER_TYPE=relay
+      - BEASTHOST=readsb
+      - BEASTPORT=30005
+      - FEEDER_ID=$PIAWARE_FEEDER_ID
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
   grafana:
     image: grafana/grafana:latest
     restart: always
