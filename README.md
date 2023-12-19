@@ -35,7 +35,7 @@ section than anything prescriptive. YMMV etc.
 * Boot up from sdcard
 * sudo apt-get install git
 * move to USB
-  * git clone https://github.com/billw2/rpi-clone.git 
+  * git clone https://github.com/billw2/rpi-clone.git
   * ./rpi-clone sda -f2
   * reboot
 * Vaidate that we rebooted from USB
@@ -79,8 +79,7 @@ section than anything prescriptive. YMMV etc.
   * rm get-docker.sh
   * sudo usermod -aG docker $USER
   * reboot
-* install external hub with [conbee](https://phoscon.de/en/conbee2) & [zwave](https://www.amazon.ca/gp/product/B00X0AWA6E) dongles (it MUST be in a USB2 port)
-  * Ensure that conbee is /tdev/ttyACM0 and zwave is /dev/ttyACM1
+* install external hub with [ZigBee](https://sonoff.tech/product/gateway-and-sensors/sonoff-zigbee-3-0-usb-dongle-plus-p/) & [zwave](https://www.amazon.ca/gp/product/B00X0AWA6E) dongles (it MUST be in a USB2 port)
 * git clone git@github.com:mtrudel/pibox.git
   * Ensure that all hostnames in Caddyfile are set up on router, pointing to the same IP as pibox
   * Set up a docker macvlan network:
@@ -88,5 +87,8 @@ section than anything prescriptive. YMMV etc.
     > docker network create -d macvlan --gateway 192.168.10.1 --ip-range 192.168.10.33/27 --subnet 192.168.10.0/24 -o parent=eth0 dockervlan
     ```
   * docker compose up -d
+  * Shell into the zigbee2mqtt controller (`docker compose run -it zigbee2mqtt
+  /bin/sh`) and set up data/configuration.conf
+  enough to get the container started (you can configure the rest from the GUI)
   * go to homebridge
     * install homebridge-z2m
