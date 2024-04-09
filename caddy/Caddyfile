@@ -29,9 +29,6 @@ homebridge {
   reverse_proxy homebridge:8581
 }
 zigbee {
-  basicauth {
-    mat JDJhJDE0JHZ6S3RwOUI3QXNLQ2tCTXVhdGV0SGVhQzVZcThXTXJ6aFV0eGp3SmZsSmlpQm5oWURLZXlh
-  }
   tls internal
   reverse_proxy zigbee2mqtt:8080
 }

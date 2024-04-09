@@ -30,7 +30,7 @@ services:
       - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
       - TZ=$TIMEZONE
   homebridge:
-    image: oznu/homebridge:latest
+    image: homebridge/homebridge:latest
     restart: always
     depends_on:
       - mosquitto
@@ -171,8 +171,6 @@ services:
     restart: always
     expose:
       - "9798"
-    environment:
-      - SPEEDTEST_SERVER=$SPEEDTEST_SERVER
   unpoller:
     image: golift/unifi-poller:latest
     restart: always
