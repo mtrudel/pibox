@@ -218,6 +218,13 @@ services:
       - WAVEPLUS_SERIALNUM=$WAVEPLUS_SERIALNUM
     volumes:
       - '/var/run/dbus/:/var/run/dbus/'
+  mqtt_exporter:
+    build: https://github.com/hikhvar/mqtt2prometheus.git
+    restart: always
+    expose:
+      - "9641"
+    volumes:
+      - ./mqtt_exporter/config.yaml:/config.yaml:ro
   pidp11:
     build: pidp11
     privileged: true
