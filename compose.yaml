@@ -313,3 +313,5 @@ volumes:
   cups-services:
   caddy-data:
   tailscale-data:
+include:
+  - compose.private.yaml
