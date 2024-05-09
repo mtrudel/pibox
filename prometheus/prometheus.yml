@@ -2,6 +2,8 @@ global:
   scrape_interval: 30s
   evaluation_interval: 10s
 
+scrape_config_files:
+  - 'prometheus.private.yml'
 scrape_configs:
   - job_name: 'snmp'
     scrape_interval: 10s
@@ -37,19 +39,6 @@ scrape_configs:
     scrape_timeout: 1m
     static_configs:
       - targets: ['speedtest-exporter:9798']
-  - job_name: ecobee_exporter
-    metrics_path: /thermostat
-    scrape_interval: 90s
-    static_configs:
-      - targets:
-        - your_thermostat_id_here
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_id
-      - source_labels: [__param_id]
-        target_label: thermostat
-      - target_label: __address__
-        replacement: ecobee_exporter:8080
   - job_name: waveplus_exporter
     static_configs:
       - targets: ['pibox:9744']

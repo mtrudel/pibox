@@ -2,3 +2,4 @@
 /archive/*
 .env
 compose.private.yaml
+prometheus/prometheus.private.yml
