@@ -14,21 +14,6 @@ services:
       - /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_74c450fbdf9ced11843c7afaa7669f5d-if00-port0:/dev/ttyACM0
     environment:
       - TZ=$TIMEZONE
-  zwavejs2mqtt:
-    image: zwavejs/zwavejs2mqtt:latest
-    restart: always
-    depends_on:
-      - mosquitto
-    expose:
-      - "8091"
-    volumes:
-      - zwavejs2mqtt-data:/usr/src/app/store
-    devices:
-      - /dev/serial/by-id/usb-0658_0200-if00:/dev/ttyACM0
-    environment:
-      - SESSION_SECRET=$ZWAVE_SESSION_SECRET
-      - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
-      - TZ=$TIMEZONE
   homebridge:
     image: homebridge/homebridge:latest
     restart: always
@@ -284,7 +269,6 @@ services:
     restart: always
     volumes:
       - zigbee2mqtt-data:/backup/zigbee2mqtt-data:ro
-      - zwavejs2mqtt-data:/backup/zwave2mqtt-data:ro
       - homebridge-data:/backup/homebridge-data:ro
       - mosquitto-config:/backup/mosquitto-config:ro
       - mosquitto-data:/backup/mosquitto-data:ro
@@ -313,7 +297,6 @@ networks:
     external: true
 volumes:
   zigbee2mqtt-data:
-  zwavejs2mqtt-data:
   homebridge-data:
   mosquitto-config:
   mosquitto-data:

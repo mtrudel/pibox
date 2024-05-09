@@ -4,8 +4,7 @@ This is a unified docker-compose setup to run the following things in our life:
 
 ## Smart Home Stuff
 * A [Zigbee](https://www.zigbee2mqtt.io) bridge to control lights and such
-* A [ZWave](https://zwave-js.github.io/zwavejs2mqtt) bridge to control door locks and such
-* A [Homebridge](https://homebridge.io) server to expose Zigbee and ZWave stuff to HomeKit
+* A [Homebridge](https://homebridge.io) server to expose Zigbee stuff to HomeKit
 * A [HAP](https://github.com/mtrudel/hap) instance to control our skylight blinds
 * A [Zigbee2soco](https://github.com/kristianwiklund/zigbee2soco) instance to control Sonos speakers via IKEA Symfonisk remotes
 
@@ -79,7 +78,7 @@ section than anything prescriptive. YMMV etc.
   * rm get-docker.sh
   * sudo usermod -aG docker $USER
   * reboot
-* install external hub with [ZigBee](https://sonoff.tech/product/gateway-and-sensors/sonoff-zigbee-3-0-usb-dongle-plus-p/) & [zwave](https://www.amazon.ca/gp/product/B00X0AWA6E) dongles (it MUST be in a USB2 port)
+* install external hub with [ZigBee](https://sonoff.tech/product/gateway-and-sensors/sonoff-zigbee-3-0-usb-dongle-plus-p/) dongle (it MUST be in a USB2 port)
 * git clone git@github.com:mtrudel/pibox.git
   * Ensure that all hostnames in Caddyfile are set up on router, pointing to the same IP as pibox
   * Set up a docker macvlan network:

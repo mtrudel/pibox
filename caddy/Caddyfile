@@ -6,7 +6,6 @@ pibox.local / {
           <li><a href="https://controllerbox">controllerbox</a></li>
           <li><a href="https://homebridge">homebridge</a></li>
           <li><a href="https://zigbee">zigbee</a> (auth is janky, may want to disable in Caddy)</li>
-          <li><a href="https://zwave">zwave</a> (auth is janky, may want to disable in Caddy)</li>
           <li><a href="https://graphbox">grafana</a></li>
           <li><a href="https://prometheus">prometheus</a></li>
           <li><a href="https://cups">CUPS</a></li>
@@ -31,13 +30,6 @@ homebridge {
 zigbee {
   tls internal
   reverse_proxy zigbee2mqtt:8080
-}
-zwave {
-  basicauth {
-    mat JDJhJDE0JHZ6S3RwOUI3QXNLQ2tCTXVhdGV0SGVhQzVZcThXTXJ6aFV0eGp3SmZsSmlpQm5oWURLZXlh
-  }
-  tls internal
-  reverse_proxy zwavejs2mqtt:8091
 }
 graphbox {
   tls internal
