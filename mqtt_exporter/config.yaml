@@ -1,0 +1,18 @@
+mqtt:
+  server: tcp://mosquitto:1883
+  topic_path: zigbee2mqtt/sensor/+
+  device_id_regex: "(.*/)?(?P<deviceid>.*)"
+metrics:
+ - prom_name: temperature
+   mqtt_name: temperature
+   help: Temperature reading
+   type: gauge
+ - prom_name: humidity
+   mqtt_name: humidity
+   mqtt_value_scale: 100
+   help: Humidity reading
+   type: gauge
+ - prom_name: pressure
+   mqtt_name: pressure
+   help: Pressure reading
+   type: gauge
