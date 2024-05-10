@@ -5,7 +5,7 @@ pibox.local / {
         <ul>
           <li><a href="https://controllerbox">controllerbox</a></li>
           <li><a href="https://homebridge">homebridge</a></li>
-          <li><a href="https://zigbee">zigbee</a> (auth is janky, may want to disable in Caddy)</li>
+          <li><a href="https://zigbee">zigbee</a></li>
           <li><a href="https://graphbox">grafana</a></li>
           <li><a href="https://prometheus">prometheus</a></li>
           <li><a href="https://cups">CUPS</a></li>
