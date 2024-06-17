@@ -19,7 +19,7 @@ defmodule HAPBox.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:hap, "~> 0.4.5"},
+      {:hap, "~> 0.5"},
       {:circuits_i2c, "~> 1.0.1"}
     ]
   end
