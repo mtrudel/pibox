@@ -10,7 +10,7 @@
 # build structure in the downloaded project
 FROM debian
 
-RUN apt-get update && apt-get install -y bsdmainutils build-essential curl file libpcap-dev libreadline-dev libsdl2-dev rpcbind sudo
+RUN apt-get update && apt-get install -y bsdmainutils build-essential curl file libpcap-dev libreadline-dev libsdl2-dev rpcbind sudo libntirpc-dev
 
 RUN mkdir /opt/pidp11
 
@@ -19,6 +19,8 @@ RUN curl -SL https://www3.ispnet.net/pidp11/pidp11.tar.gz | tar -xvzC /opt/pidp1
 # Clean up stuff in simh fork (client) and rebuild it. Use sed instead of patches to keep this dockerfile self-contained
 RUN rm /opt/pidp11/src/02.3_simh/4.x+realcons/bin-rpi/pdp11_realcons
 RUN sed -i 's/LIBPCAP=.*/LIBPCAP=-lpcap/' /opt/pidp11/src/02.3_simh/4.x+realcons/src/quickmake
+RUN sed -i 's/LDFLAGS\ =\ -lrt/LDFLAGS\ =\ -lrt\ -ltirpc/' /opt/pidp11/src/02.3_simh/4.x+realcons/src/quickmake
+RUN sed -i 's/CC\ =\ gcc/CC\ =\ gcc\ -I\ \/usr\/include\/tirpc/' /opt/pidp11/src/02.3_simh/4.x+realcons/src/quickmake
 RUN sed -i 's/.*console_controller_event_func_t.*realcons_event_cpu_reset.*//' /opt/pidp11/src/02.3_simh/4.x+realcons/src/scp.c
 RUN (cd /opt/pidp11/src && . ./makeclient.sh)
 
@@ -30,6 +32,8 @@ RUN (cd /opt/pidp11/src/11_pidp_server/scanswitch && make)
 # Don't be so strict about build type, so as to enable arm64
 RUN sed -i 's/arm-linux-gnueabihf-gcc/gcc/' /opt/pidp11/src/07.1_blinkenlight_server/makefile
 RUN sed -i 's/arm-linux-gnueabihf-gcc/gcc/' /opt/pidp11/src/11_pidp_server/pidp11/makefile
+RUN sed -i 's/LDFLAGS\ =\ -pthread/LDFLAGS\ =\ -pthread\ -ltirpc/' /opt/pidp11/src/11_pidp_server/pidp11/makefile
+RUN sed -i 's/CC=gcc\ -std=c99/CC=gcc\ -std=c99\ -I\ \/usr\/include\/tirpc/' /opt/pidp11/src/11_pidp_server/pidp11/makefile
 # Hack out dimming support for a ~15x decrease in CPU load. We do this by not
 # bothering to run LED brightness through phases in gpio.c. This is a SUPER
 # bogus hack that would be better accomplished by tearing it all out and
