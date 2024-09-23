@@ -156,6 +156,11 @@ services:
     restart: always
     expose:
       - "9798"
+  hdhomerun-exporter:
+    build: https://github.com/akatz/hdhomerun_exporter.git
+    restart: always
+    expose:
+      - "9137"
   unpoller:
     image: golift/unifi-poller:latest
     restart: always
