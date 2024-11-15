@@ -16,3 +16,23 @@ metrics:
    mqtt_name: pressure
    help: Pressure reading
    type: gauge
+ - prom_name: current
+   mqtt_name: current
+   help: Current in amps
+   type: gauge
+ - prom_name: power
+   mqtt_name: power
+   help: Power in watts
+   type: gauge
+ - prom_name: power_factor
+   mqtt_name: power_factor
+   help: Power factor in percent
+   type: gauge
+ - prom_name: voltage
+   mqtt_name: voltage
+   help: Voltage in volts
+   type: gauge
+ - prom_name: ac_frequency
+   mqtt_name: ac_frequency
+   help: Frequency in Hertz
+   type: gauge
