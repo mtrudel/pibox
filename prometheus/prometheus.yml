@@ -25,3 +25,6 @@ scrape_configs:
   - job_name: mqtt_exporter
     static_configs:
       - targets: ['mqtt_exporter:9641']
+  - job_name: readsb
+    static_configs:
+      - targets: ['readsb:9273']

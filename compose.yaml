@@ -85,9 +85,11 @@ services:
       - READSB_LAT=$LAT
       - READSB_LON=$LON
       - READSB_MODEAC=true
-      - READSB_RX_LOCATION_ACCURACY=1
+      - READSB_RX_LOCATION_ACCURACY=2
       - READSB_STATS_RANGE=true
       - READSB_NET_ENABLE=true
+      - ENABLE_PROMETHEUS=true
+      - READSB_RTLSDR_PPM=$PPM
     volumes:
       - readsbpb_rrd:/run/collectd
       - readsbpb_autogain:/run/autogain
@@ -113,6 +115,19 @@ services:
     tmpfs:
       - /run:exec,size=64M
       - /var/log
+  adsbexchange:
+    image: ghcr.io/sdr-enthusiasts/docker-adsbexchange:latest
+    restart: always
+    environment:
+      - BEASTHOST=readsb
+      - TZ=$TIMEZONE
+      - LAT=$LAT
+      - LONG=$LON
+      - ALT=$ALT
+      - SITENAME=$ADSBEXCHANGE_SITENAME
+      - UUID=$ADSBEXCHANGE_UUID
+    tmpfs:
+      - /run:rw,nosuid,nodev,exec,relatime,size=64M,uid=1000,gid=1000
   grafana:
     image: grafana/grafana:latest
     restart: always
@@ -121,7 +136,7 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
     environment:
-      - GF_INSTALL_PLUGINS=grafana-clock-panel,natel-discrete-panel,grafana-piechart-panel
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,natel-discrete-panel,grafana-piechart-panel,nline-plotlyjs-panel
   prometheus:
     image: prom/prometheus:latest
     restart: always
