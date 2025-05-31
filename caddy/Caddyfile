@@ -1,4 +1,5 @@
 pibox.local / {
+  header Content-Type text/html
   respond `
     <html>
       <body>
