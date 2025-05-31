@@ -21,9 +21,17 @@ This is a unified docker-compose setup to run the following things in our life:
 * A simple Alpine-based sandbox for futzing around in
 * Backups and proxy server for all of the above
 
-All of this runs on a single RPi 4 (8GB) in our house, with quite a bit of extra room.
+All of this runs on a [small VM](https://github.com/mtrudel/rabble) in our house, and previously
+ran on a RPi 4 (8GB), with quite a bit of extra room.
 
-## Setting up the Pi
+## Setting up the basics on a VM
+
+Follow the [notes over on the rabble
+repo](https://github.com/mtrudel/rabble?tab=readme-ov-file#linux-guest-install)
+to get the basic box up and running, then jump to the 'Setting up Docker
+containers' section below.
+
+## Setting up the basics on an rPi
 
 Raw notes from the last time I set the box up. This is more of a 'note to self'
 section than anything prescriptive. YMMV etc.
@@ -73,21 +81,25 @@ section than anything prescriptive. YMMV etc.
 * touch .hushlogin
 * append bind ‘set enable-bracketed-paste off’ to .bashrc
 * Install docker
-  * curl -fsSL https://get.docker.com -o get-docker.sh
-  * sudo sh get-docker.sh
-  * rm get-docker.sh
-  * sudo usermod -aG docker $USER
+  * `curl -fsSL https://get.docker.com -o get-docker.sh`
+  * `sudo sh get-docker.sh`
+  * `rm get-docker.sh`
+  * `sudo usermod -aG docker $USER`
   * reboot
+
+## Setting up Docker containers
+
 * install external hub with [ZigBee](https://sonoff.tech/product/gateway-and-sensors/sonoff-zigbee-3-0-usb-dongle-plus-p/) dongle (it MUST be in a USB2 port)
-* git clone git@github.com:mtrudel/pibox.git
-  * Ensure that all hostnames in Caddyfile are set up on router, pointing to the same IP as pibox
-  * Set up a docker macvlan network:
+
+* `git clone git@github.com:mtrudel/pibox.git`
+* `cp .env.template .env` and update all the values in `.env`
+* Ensure that all hostnames in Caddyfile are set up on router, pointing to the same IP as this instance
+* Set up a docker macvlan network:
     ```
     > docker network create -d macvlan --gateway 192.168.10.1 --ip-range 192.168.10.33/27 --subnet 192.168.10.0/24 -o parent=eth0 dockervlan
     ```
-  * docker compose up -d
-  * Shell into the zigbee2mqtt controller (`docker compose run -it zigbee2mqtt
-  /bin/sh`) and set up data/configuration.conf
-  enough to get the container started (you can configure the rest from the GUI)
-  * go to homebridge
-    * install homebridge-z2m
+* `docker compose up -d`
+* Shell into the zigbee2mqtt controller (`docker compose run -it zigbee2mqtt
+/bin/sh`) and set up data/configuration.conf enough to get the container started (you can configure the rest from the GUI)
+* go to homebridge
+  * install homebridge-z2m
