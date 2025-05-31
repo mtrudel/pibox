@@ -172,7 +172,7 @@ services:
     expose:
       - "9798"
   hdhomerun-exporter:
-    build: https://github.com/akatz/hdhomerun_exporter.git
+    build: https://github.com/mtrudel/hdhomerun_exporter.git
     restart: always
     expose:
       - "9137"
