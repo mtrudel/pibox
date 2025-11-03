@@ -81,7 +81,7 @@ services:
       - TZ=$TIMEZONE
       - READSB_DEVICE_TYPE=rtlsdr
       - READSB_FIX=true
-      - READSB_GAIN=autogain
+      - READSB_GAIN=$GAIN
       - READSB_LAT=$LAT
       - READSB_LON=$LON
       - READSB_MODEAC=true

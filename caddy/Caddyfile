@@ -1,4 +1,4 @@
-pibox.local / {
+blathers.local / {
   header Content-Type text/html
   respond `
     <html>
