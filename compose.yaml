@@ -72,36 +72,50 @@ services:
       - unifi-data:/config
     environment:
       - MEM_LIMIT=1024
-  readsb:
-    image: ghcr.io/sdr-enthusiasts/docker-readsb-protobuf:latest
+  ultrafeeder:
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder
     restart: always
+    ports:
+      - 9274:9274
     devices:
       - /dev/bus/usb:/dev/bus/usb
     environment:
       - TZ=$TIMEZONE
       - READSB_DEVICE_TYPE=rtlsdr
-      - READSB_FIX=true
       - READSB_GAIN=$GAIN
+      - READSB_RTLSDR_PPM=$PPM
       - READSB_LAT=$LAT
       - READSB_LON=$LON
-      - READSB_MODEAC=true
+      - READSB_ALT=$ALT
       - READSB_RX_LOCATION_ACCURACY=2
       - READSB_STATS_RANGE=true
-      - READSB_NET_ENABLE=true
-      - ENABLE_PROMETHEUS=true
-      - READSB_RTLSDR_PPM=$PPM
+      - UPDATE_TAR1090=true
+      - TAR1090_DEFAULTCENTERLAT=$LAT
+      - TAR1090_DEFAULTCENTERLON=$LON
+      - TAR1090_MESSAGERATEINTITLE=true
+      - TAR1090_PLANECOUNTINTITLE=true
+      - TAR1090_ENABLE_AC_DB=true
+      - TAR1090_FLIGHTAWARELINKS=true
+      - TAR1090_SITESHOW=true
+      - TAR1090_RANGE_OUTLINE_COLORED_BY_ALTITUDE=true
+      - TAR1090_RANGE_OUTLINE_WIDTH=2.0
+      - TAR1090_RANGERINGSDISTANCES=50,100,200
+      - TAR1090_RANGERINGSCOLORS='#1A237E','#0D47A1','#42A5F5','#64B5F6'
+      - TAR1090_USEROUTEAPI=true
+      - GRAPHS1090_DARKMODE=true
+      - PROMETHEUS_ENABLE=true
     volumes:
-      - readsbpb_rrd:/run/collectd
-      - readsbpb_autogain:/run/autogain
-      - /proc/diskstats:/proc/diskstats:ro
+      - ultrafeeder-globe_history:/var/globe_history
+      - ultrafeeder-graphs1090:/var/lib/collectd
     tmpfs:
-      - /run/readsb:size=64M
+      - /run:exec,size=256M
+      - /tmp:size=128M
       - /var/log:size=32M
   fr24feed:
     image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
     restart: always
     environment:
-      - BEASTHOST=readsb
+      - BEASTHOST=ultrafeeder
       - FR24KEY=$FR24KEY
   piaware:
     image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
@@ -109,8 +123,7 @@ services:
     environment:
       - TZ=$TIMEZONE
       - RECEIVER_TYPE=relay
-      - BEASTHOST=readsb
-      - BEASTPORT=30005
+      - BEASTHOST=ultrafeeder
       - FEEDER_ID=$PIAWARE_FEEDER_ID
     tmpfs:
       - /run:exec,size=64M
@@ -119,7 +132,7 @@ services:
     image: ghcr.io/sdr-enthusiasts/docker-adsbexchange:latest
     restart: always
     environment:
-      - BEASTHOST=readsb
+      - BEASTHOST=ultrafeeder
       - TZ=$TIMEZONE
       - LAT=$LAT
       - LONG=$LON
@@ -322,8 +335,8 @@ volumes:
   mosquitto-data:
   mosquitto-log:
   hapbox-data:
-  readsbpb_rrd:
-  readsbpb_autogain:
+  ultrafeeder-globe_history:
+  ultrafeeder-graphs1090:
   unifi-data:
   grafana-data:
   prometheus-data:

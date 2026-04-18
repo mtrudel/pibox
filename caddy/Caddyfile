@@ -10,7 +10,7 @@ blathers.local / {
           <li><a href="https://graphbox">grafana</a></li>
           <li><a href="https://prometheus">prometheus</a></li>
           <li><a href="https://cups">CUPS</a></li>
-          <li><a href="https://readsb">(re)ADS-B</a></li>
+          <li><a href="https://ultrafeeder">ADSB</a></li>
         </ul>
       </body>
     </html>
@@ -43,6 +43,10 @@ prometheus {
 cups {
   tls internal
   reverse_proxy cups:631
+}
+ultrafeeder {
+  tls internal
+  reverse_proxy ultrafeeder:80
 }
 readsb {
   tls internal
