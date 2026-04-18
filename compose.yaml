@@ -48,8 +48,10 @@ services:
     volumes:
       - hapbox-data:/app/_build/prod/rel/hapbox/hap_data
   zigbee2soco:
-    build: https://github.com/kristianwiklund/zigbee2soco.git#main
+    build: https://github.com/mtrudel/zigbee2soco.git#main
     restart: always
+    depends_on:
+      - mosquitto
     networks:
       default: {}
       dockervlan:
