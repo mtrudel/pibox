@@ -335,6 +335,7 @@ services:
       - mosquitto-data:/backup/mosquitto-data:ro
       - hapbox-data:/backup/hapbox-data:ro
       - unifi-data:/backup/unifi-data:ro
+      - unifi-db:/backup/unifi-db:ro
       - grafana-data:/backup/grafana-data:ro
       - prometheus-data:/backup/prometheus-data:ro
       - promobee-data:/backup/promobee-data:ro
