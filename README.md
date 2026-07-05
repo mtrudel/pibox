@@ -18,7 +18,6 @@ This is a unified docker-compose setup to run the following things in our life:
 * An RTL-SDR powered ADSB stack that publishes to flightradar24
 * A dockerized version of the [PiDP-11](https://obsolescence.wixsite.com/obsolescence/pidp-11) emulator
 * An AirPrint bridge for our ancient laser printer
-* A simple Alpine-based sandbox for futzing around in
 * Backups and proxy server for all of the above
 
 All of this runs on a [small VM](https://github.com/mtrudel/rabble) in our house, and previously

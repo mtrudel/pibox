@@ -275,14 +275,6 @@ services:
     build: pidp11
     privileged: true
     restart: always
-  shellbox:
-    build: shellbox
-    restart: always
-    hostname: shellbox
-    stdin_open: true
-    tty: true
-    volumes:
-      - shellbox-root-home:/root
   cups:
     image: chuckcharlie/cups-avahi-airprint:latest
     restart: always
@@ -339,7 +331,6 @@ services:
       - grafana-data:/backup/grafana-data:ro
       - prometheus-data:/backup/prometheus-data:ro
       - promobee-data:/backup/promobee-data:ro
-      - shellbox-root-home:/backup/shellbox-root-home:ro
       - cups-config:/backup/cups-config:ro
       - cups-services:/backup/cups-services:ro
       - caddy-data:/backup/caddy-data:ro
@@ -372,7 +363,6 @@ volumes:
   grafana-data:
   prometheus-data:
   promobee-data:
-  shellbox-root-home:
   cups-config:
   cups-services:
   caddy-data:
