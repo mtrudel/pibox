@@ -346,9 +346,9 @@ services:
       - ./archive:/archive
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - BACKUP_CRON_EXPRESSION=0 7 * * *
+      - BACKUP_CRON_EXPRESSION=0 7 */2 * *
       - BACKUP_RETENTION_DAYS=3
-      - AWS_STORAGE_CLASS=GLACIER
+      - AWS_ENDPOINT=$AWS_ENDPOINT
       - AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
