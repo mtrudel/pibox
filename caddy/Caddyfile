@@ -19,6 +19,7 @@ blathers.local / {
 controllerbox {
   tls internal
   reverse_proxy https://unifi-controller:8443 {
+    header_up Host {hostport}
     transport http {
       tls_insecure_skip_verify
     }
