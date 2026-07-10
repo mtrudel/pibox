@@ -134,6 +134,7 @@ services:
       - GRAPHS1090_DARKMODE=true
       - GRAPHS1090_ENABLE=false
       - PROMETHEUS_ENABLE=true
+      - ULTRAFEEDER_CONFIG=adsb,feed1.adsbexchange.com,30004,beast_reduce_out,uuid=$ADSBEXCHANGE_UUID
     volumes:
       - ultrafeeder-graphs1090:/var/lib/collectd
     tmpfs:
@@ -157,19 +158,6 @@ services:
     tmpfs:
       - /run:exec,size=64M
       - /var/log
-  adsbexchange:
-    image: ghcr.io/sdr-enthusiasts/docker-adsbexchange:latest
-    restart: always
-    environment:
-      - BEASTHOST=ultrafeeder
-      - TZ=$TIMEZONE
-      - LAT=$LAT
-      - LONG=$LON
-      - ALT=$ALT
-      - SITENAME=$ADSBEXCHANGE_SITENAME
-      - UUID=$ADSBEXCHANGE_UUID
-    tmpfs:
-      - /run:rw,nosuid,nodev,exec,relatime,size=64M,uid=1000,gid=1000
   grafana:
     image: grafana/grafana:latest
     restart: always
