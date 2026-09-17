@@ -267,6 +267,7 @@ services:
   cups:
     image: chuckcharlie/cups-avahi-airprint:latest
     restart: always
+    command: ["/entrypoint.sh"]
     networks:
       dockervlan:
         ipv4_address: $CUPS_IP_ADDRESS
@@ -275,9 +276,29 @@ services:
     volumes:
       - cups-config:/config
       - cups-services:/services
+      - ./cups/entrypoint.sh:/entrypoint.sh:ro
     environment:
       - CUPSADMIN=$CUPS_USERNAME
       - CUPSPASSWORD=$CUPS_PASSWORD
+  airsane:
+    image: aguslr/airsane
+    restart: always
+    # deliberately not using macvlan; the scanner's BJNP handshake doesn't work
+    # (sane_open times out after 46s, "Invalid argument").
+    entrypoint: /opt/entrypoint.sh
+    command:
+      - '--access-log=-'
+      - '--disclose-version=false'
+    volumes:
+      - /run/dbus:/run/dbus
+      - ./airsane/drivers:/opt/drivers
+      - ./airsane/entrypoint.sh:/opt/entrypoint.sh:ro
+    ports:
+      - "8090:8090"
+    environment:
+      - BROTHER_SCANNER_NAME=$SCANNER_NAME
+      - BROTHER_SCANNER_MODEL=$SCANNER_MODEL
+      - BROTHER_SCANNER_IP=$SCANNER_IP_ADDRESS
   caddy:
     image: caddy:latest
     restart: always
