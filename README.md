@@ -98,6 +98,13 @@ section than anything prescriptive. YMMV etc.
     > docker network create -d macvlan --gateway 192.168.10.1 --ip-range 192.168.10.33/27 --subnet 192.168.10.0/24 -o parent=eth0 dockervlan
     ```
 * `docker compose up -d`
+* Load netfilter kernel modules required for tailscale subnet routing to work, and persist
+  them across reboots (without this, tailscale's iptables setup fails silently and subnet
+  routes / exit node traffic get dropped):
+  ```
+  > sudo modprobe iptable_filter iptable_nat ip6table_filter ip6table_nat
+  > printf 'iptable_filter\niptable_nat\nip6table_filter\nip6table_nat\n' | sudo tee /etc/modules-load.d/tailscale.conf
+  ```
 * Shell into the zigbee2mqtt controller (`docker compose run -it zigbee2mqtt
 /bin/sh`) and set up data/configuration.conf enough to get the container started (you can configure the rest from the GUI)
 * go to homebridge
