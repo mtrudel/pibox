@@ -1,4 +1,4 @@
-blathers.local / {
+rabble.local / {
   # Serve Caddy's local CA root certificate so clients can trust it (see add-cert in the dotfiles repo)
   handle /root.crt {
     root * /data/caddy/pki/authorities/local
