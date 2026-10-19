@@ -1,20 +1,28 @@
 blathers.local / {
-  header Content-Type text/html
-  respond `
-    <html>
-      <body>
-        <ul>
-          <li><a href="https://controllerbox">controllerbox</a></li>
-          <li><a href="https://homebridge">homebridge</a></li>
-          <li><a href="https://zigbee">zigbee</a></li>
-          <li><a href="https://graphbox">grafana</a></li>
-          <li><a href="https://prometheus">prometheus</a></li>
-          <li><a href="https://cups">CUPS</a></li>
-          <li><a href="https://ultrafeeder">ADSB</a></li>
-        </ul>
-      </body>
-    </html>
-  `
+  # Serve Caddy's local CA root certificate so clients can trust it (see add-cert in the dotfiles repo)
+  handle /root.crt {
+    root * /data/caddy/pki/authorities/local
+    file_server
+  }
+
+  handle {
+    header Content-Type text/html
+    respond `
+      <html>
+        <body>
+          <ul>
+            <li><a href="https://controllerbox">controllerbox</a></li>
+            <li><a href="https://homebridge">homebridge</a></li>
+            <li><a href="https://zigbee">zigbee</a></li>
+            <li><a href="https://graphbox">grafana</a></li>
+            <li><a href="https://prometheus">prometheus</a></li>
+            <li><a href="https://cups">CUPS</a></li>
+            <li><a href="https://ultrafeeder">ADSB</a></li>
+          </ul>
+        </body>
+      </html>
+    `
+  }
 }
 controllerbox {
   tls internal

@@ -305,6 +305,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      # HTTP/3 (QUIC). Caddy advertises h3 via Alt-Svc, so UDP 443 must be reachable
+      - "443:443/udp"
     volumes:
       - caddy-data:/data
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
